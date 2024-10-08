@@ -48,3 +48,25 @@ print(conf_int_variance)
 prop <- sum(scores > 25) / length(scores)
 conf_int_prop <- BinomCI(sum(scores > 25), length(scores), conf.level=0.95)
 print(conf_int_prop)
+
+# Часть 3
+# Считываем данные из файла xls
+dataset <- read_excel("ДанныеТитаник.xls")
+data <- na.omit(dataset)
+
+# 1 Задание
+# 95% доверительный интервал
+conf_interval_mean <- MeanCI(data$age, conf.level = 0.95, na.rm = TRUE)
+cat('95% доверительный интервал для среднего возраста: [', conf_interval_mean[1], ',', conf_interval_mean[2], ']\n')
+
+# Дисперсия и 95% доверительный интервал для дисперсии возраста
+conf_interval_var <- VarCI(data$age, conf.level = 0.95, na.rm = TRUE)
+cat('95% доверительный интервал для дисперсии возраста: [', conf_interval_var[1], ',', conf_interval_var[2], ']\n')
+
+# Среднее и 95% доверительный интервал для среднего возраста при известном стандартном отклонении
+conf_interval_known_sd <- age_mean + c(-1, 1) * qnorm(1 - 0.05/2) * (8 / sqrt(sum(!is.na(data$age))))
+cat('95% доверительный интервал для среднего возраста при ср.квадратичном отклонении 8: [', conf_interval_known_sd[1], ',', conf_interval_known_sd[2], ']\n')
+
+# Пропорция и 95% доверительный интервал для доли выживших
+conf_interval_survived <- BinomCI(sum(data$survived == 1, na.rm = TRUE), sum(!is.na(data$survived)), conf.level = 0.95)
+cat('95% доверительный интервал для доли людей, которые выжили: [', conf_interval_survived[1], ',', conf_interval_survived[2], ']\n')
